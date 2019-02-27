@@ -4,7 +4,7 @@ import com.pixelstack.ims.common.Result_Error;
 import com.pixelstack.ims.common.Result_Success;
 import com.pixelstack.ims.common.exception.NotFoundException;
 import com.pixelstack.ims.domain.Tag;
-import com.pixelstack.ims.service.TagService;
+import com.pixelstack.ims.mapper.TagMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,7 +15,7 @@ public class TagController {
     public final static int ERROR = 0;
 
     @Autowired
-    TagService tagService;
+    TagMapper tagService;
 
     @GetMapping(value={"/selectTagById"})
     public Tag selectTagById(String id) throws NotFoundException {
