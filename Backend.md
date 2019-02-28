@@ -94,7 +94,9 @@ public interface TagService {
 推荐使用接口测试工具：[Postman](https://www.getpostman.com/)
 
 
-## 更新 2/27
+## 更新 
+
+### 2/27
 
 添加了 mapper 层作为数据库操作层，service 层专门负责业务逻辑处理。
 
@@ -139,4 +141,8 @@ public interface UserMapper {
     public User checkUser(@Param("username") String username, @Param("password") String password);
 }
 ```
+
+### 2/28
+
+新增加了 token 验证用户，需要登录验证的功能请求，请在映射路由中添加 @UserLoginToken 注解声明需要验证
 
