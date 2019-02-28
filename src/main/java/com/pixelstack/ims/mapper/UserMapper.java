@@ -12,5 +12,9 @@ public interface UserMapper {
     public int addUser(User user);
 
     @Select("select * from tb_User_Info where username = #{username} and password = #{password}")
-    public User checkUser(@Param("username") String username, @Param("password") String password);
+    public User checkUser(User user);
+
+    @Select("select * from tb_User_Info where uid = #{uid}")
+    public User selectUserById(@Param("uid") int uid);
+
 }

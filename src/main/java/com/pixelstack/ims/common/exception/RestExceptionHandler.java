@@ -1,6 +1,5 @@
 package com.pixelstack.ims.common.exception;
 
-import com.pixelstack.ims.common.Result_Error;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpStatus;
@@ -23,4 +22,14 @@ public class RestExceptionHandler
         logger.error(e.getMessage(), e);                // 打印错误信息
         return new Result_Error(e.getMessage(), e.getCode(), new ResponseEntity<>(HttpStatus.NOT_FOUND).getStatusCodeValue());
     }
+
+    @ExceptionHandler(value = InternalErrorException.class)
+    @ResponseBody
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public Result_Error handleResourceInternalServerErrorException(InternalErrorException e) {
+        logger.error(e.getMessage(), e);                // 打印错误信息
+        return new Result_Error(e.getMessage(), e.getCode(), new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR).getStatusCodeValue());
+    }
+
+
 }

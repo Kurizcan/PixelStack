@@ -1,5 +1,7 @@
 package com.pixelstack.ims.service;
 
+import com.pixelstack.ims.common.Auth.Authentication;
+import com.pixelstack.ims.common.exception.InternalErrorException;
 import com.pixelstack.ims.domain.User;
 import com.pixelstack.ims.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +15,10 @@ public class UserService {
     @Autowired
     UserMapper userMapper;
 
-    public int register(User user) {
+    @Autowired
+    Authentication authentication;
+
+    public int register(User user) throws InternalErrorException {
         user.setAuthority("user");
         user.setStatus("normal");
         return userMapper.addUser(user);
@@ -22,12 +27,24 @@ public class UserService {
     /**
      * 用户登录
      */
-    public boolean login(String username, String password) {
-        User user = userMapper.checkUser(username, password);
-        if (user == null)
-            return false;
-        else
-            return true;
+    public User login(User user) {
+        return userMapper.checkUser(user);
+    }
+
+    /**
+     * 验证用户
+     * @param token
+     * @return
+     */
+    public User vaild(String token) {
+        int uid;
+        User user = null;
+        if (authentication.vaildToken(token)) {
+            // 验证成功，返回用户信息
+            uid = Integer.parseInt(authentication.getUidByToken(token));
+            user = userMapper.selectUserById(uid);
+        }
+        return user;
     }
 
 }

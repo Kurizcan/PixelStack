@@ -7,3 +7,4 @@ public class NotFoundException extends GlobalException
         super(message, code);
     }
 }
+
