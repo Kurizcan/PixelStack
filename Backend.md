@@ -9,6 +9,7 @@
 			  	 |- common        		# 共有文件（包括异常处理）
 				 |- controller       		# 控制层
 				 |- domain			# 定义实体类
+				 |- mapper			# 数据操作层
 				 |- service			# 业务层
 		  |- resources	
 		  	 |- static
@@ -93,5 +94,49 @@ public interface TagService {
 推荐使用接口测试工具：[Postman](https://www.getpostman.com/)
 
 
+## 更新 2/27
 
+添加了 mapper 层作为数据库操作层，service 层专门负责业务逻辑处理。
+
+以 UserColloer 为例：
+
+```java
+
+public class UserController {
+
+    public final static int ERROR = 0;
+
+    @Autowired
+    UserService userService;
+
+    @PostMapping(value={"/register"})
+    public Object userRegister(User user) {
+        int status = userService.register(user);
+        if (status == ERROR) {
+            // 注册出现错误，抛出错误
+            return null;
+        }
+        else {
+            return new Result_Success("SUSSESS EFFECT " + status + " row");
+        }
+    }
+
+}
+```
+
+在 userRegister 方法中将调用 service 层的 UserService 的 register 方法进行注册。
+
+service 层的 UserService 将调用 mapper 层的 UserMapper 接口中的方法进行数据库层的操作。
+
+```java
+public interface UserMapper {
+
+    @Insert("insert into tb_User_Info(username,password,authority,email,status) " +
+            "values (#{username},#{password},#{authority},#{email},#{status})")
+    public int addUser(User user);
+
+    @Select("select * from tb_User_Info where username = #{username} and password = #{password}")
+    public User checkUser(@Param("username") String username, @Param("password") String password);
+}
+```
 
