@@ -70,6 +70,7 @@ public class UserController {
         return result;
     }
 
+    /*
     @PostMapping(value = {"/vaild"})
     public Object vaildUser(String token) {
         User user = userService.vaild(token);
@@ -83,10 +84,18 @@ public class UserController {
             result.put("status", "200");
             data.put("uid", user.getUid());
             data.put("username", user.getUsername());
+            data.put("Authority", user.getAuthority());
             result.put("data", data);
         }
         return result;
     }
+    */
+
+    @PostMapping(value = {"/getUserInfo"})
+    public Object getUserInfo(String token) {
+        return null;
+    }
+
 
     @UserLoginToken
     @PostMapping(value = {"/getMessage"})
@@ -95,4 +104,18 @@ public class UserController {
     }
 
 
+    @UserLoginToken
+    @PostMapping(value = {"/modify"})
+    public Object modify(User user) {
+        result.clear();
+        if (userService.modify(user) == 0) {
+            result.put("status", "200");
+            result.put("message", "修改成功");
+        }
+        else {
+            result.put("status", "500");
+            result.put("message", "修改失败");
+        }
+        return result;
+    }
 }

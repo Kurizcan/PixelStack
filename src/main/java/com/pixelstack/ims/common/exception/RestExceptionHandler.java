@@ -31,5 +31,13 @@ public class RestExceptionHandler
         return new Result_Error(e.getMessage(), e.getCode(), new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR).getStatusCodeValue());
     }
 
+    @ExceptionHandler(value = UnAuthorizedException.class)
+    @ResponseBody
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public Result_Error handleResourceUnAuthorizedException(UnAuthorizedException e) {
+        logger.error(e.getMessage(), e);                // 打印错误信息
+        return new Result_Error(e.getMessage(), e.getCode(), new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR).getStatusCodeValue());
+    }
+
 
 }

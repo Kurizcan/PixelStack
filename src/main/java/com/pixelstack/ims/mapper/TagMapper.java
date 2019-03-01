@@ -7,12 +7,12 @@ import org.apache.ibatis.annotations.Select;
 
 public interface TagMapper {
 
-    @Select("select * from tb_Tag where tid = #{tid}")
+    @Select("select * from tb_tag where tid = #{tid}")
     public Tag selectTagById(int tid);
 
-    @Insert("insert into tb_Tag(tid,tagname) values (#{tid},#{tagname})")
+    @Insert("insert into tb_tag(tid,tagname) values (#{tid},#{tagname})")
     public int addTag(Tag tag);
 
-    @Delete("delete from tb_Tag where tid=#{tid}")
+    @Delete("delete from tb_tag where tid=#{tid}")
     public int deleteTagById(int tid);
 }

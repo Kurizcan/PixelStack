@@ -35,6 +35,7 @@ public class Result_Error extends Result
         UNAUTHORIZATION_NOTOKEN(40101),     // 用户未进行认证
         UNAUTHORIZATION_NOUSER(40102),      // token 无指定用户
         UNAUTHORIZATION_OUT_OF_DATE(40103), // token 已经过期
+        UNAUTHORIZATION_Token_Verify_Error(40104), // JWT token 验证失败
         ;
 
         private int code;

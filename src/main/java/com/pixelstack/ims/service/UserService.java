@@ -5,6 +5,7 @@ import com.pixelstack.ims.common.exception.InternalErrorException;
 import com.pixelstack.ims.domain.User;
 import com.pixelstack.ims.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.config.ScheduledTaskRegistrar;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -46,5 +47,16 @@ public class UserService {
         }
         return user;
     }
+
+    /**
+     * 修改用户信息
+     * @param user
+     * @return
+     */
+    public int modify(User user) {
+        int status = userMapper.updateUserById(user);
+        return status;
+    }
+
 
 }

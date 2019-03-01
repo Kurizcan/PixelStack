@@ -5,6 +5,8 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.pixelstack.ims.common.exception.Result_Error;
+import com.pixelstack.ims.common.exception.UnAuthorizedException;
 import com.pixelstack.ims.domain.User;
 import com.pixelstack.ims.mapper.UserMapper;
 import com.pixelstack.ims.service.UserService;
@@ -49,28 +51,30 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
             if (userLoginToken.required()) {
                 // 执行认证
                 if (token == null) {
-                    throw new RuntimeException("无token，请重新登录");
+                    //throw new RuntimeException("无token，请重新登录");
+                    throw new UnAuthorizedException("无token，请重新登录", Result_Error.ErrorCode.UNAUTHORIZATION_NOTOKEN.getCode());
                 }
                 // 获取 token 中的 user id
                 String uid;
                 try {
                     uid = JWT.decode(token).getAudience().get(0);
                 } catch (JWTDecodeException j) {
-                    throw new RuntimeException("401");
+                    throw new UnAuthorizedException("token 可能已经被篡改", Result_Error.ErrorCode.UNAUTHORIZATION_Token_Verify_Error.getCode());
                 }
                 User user = userMapper.selectUserById(Integer.parseInt(uid));
                 if (user == null) {
-                    throw new RuntimeException("用户不存在，请重新登录");
+                    throw new UnAuthorizedException("用户不存在，请重新登录", Result_Error.ErrorCode.UNAUTHORIZATION_NOUSER.getCode());
+
                 }
                 // 验证 token
                 JWTVerifier jwtVerifier = JWT.require(Algorithm.HMAC256(user.getPassword())).build();
                 try {
                     jwtVerifier.verify(token);
                 } catch (JWTVerificationException e) {
-                    throw new RuntimeException("401");
+                    throw new UnAuthorizedException("token 可能已经被篡改", Result_Error.ErrorCode.UNAUTHORIZATION_Token_Verify_Error.getCode());
                 }
                 if (!authentication.vaildToken(token)) {
-                    throw new RuntimeException("登陆已过期，请重新登陆");
+                    throw new UnAuthorizedException("登陆已过期，请重新登陆", Result_Error.ErrorCode.UNAUTHORIZATION_OUT_OF_DATE.getCode());
                 }
                 return true;
             }
