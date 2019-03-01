@@ -146,3 +146,7 @@ public interface UserMapper {
 
 新增加了 token 验证用户，需要登录验证的功能请求，请在映射路由中添加 @UserLoginToken 注解声明需要验证
 
+### 3/1
+
+已实现接口说明：[Interface.md](https://github.com/Lcanboom/PixelStack/blob/master/Interface.md)
+
