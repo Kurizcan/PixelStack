@@ -4,10 +4,12 @@
 
 ### 获取用户信息
 
+
     method:GET
     http://localhost:8080/user/getUserInfo?uid=103   
 
     return:
+```JSON
     {
         "userInfo": {
             "star": 0,
@@ -21,7 +23,7 @@
         },
         "status": "200"
     }
-
+```
 ### 修改用户信息
 
     method:GET
