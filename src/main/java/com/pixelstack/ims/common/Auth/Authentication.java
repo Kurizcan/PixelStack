@@ -64,4 +64,13 @@ public class Authentication {
     public String getUidByToken(String token) {
         return redisOperator.get(token);
     }
+
+    /**
+     * deleteToken
+     * @param user
+     */
+    public void deleteToken(User user) {
+        String oldToken = this.createToken(user);
+        redisOperator.del(oldToken);
+    }
 }

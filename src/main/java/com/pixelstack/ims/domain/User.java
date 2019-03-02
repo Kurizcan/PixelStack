@@ -12,4 +12,5 @@ public class User {
     private String authority;
     private String email;
     private String status;
+    private String introduction;
 }

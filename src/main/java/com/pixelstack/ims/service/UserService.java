@@ -5,8 +5,9 @@ import com.pixelstack.ims.common.exception.InternalErrorException;
 import com.pixelstack.ims.domain.User;
 import com.pixelstack.ims.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.config.ScheduledTaskRegistrar;
 import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
 
 @Service
 public class UserService {
@@ -49,13 +50,45 @@ public class UserService {
     }
 
     /**
-     * 修改用户信息
+     * 修改用户信息， 可以修改用户姓名、密码、邮箱信息
      * @param user
      * @return
+     * 1 更新成功
+     * 2 更改了密码
+     * 0 更新失败
      */
     public int modify(User user) {
+        User old = userMapper.selectUserById(user.getUid());
         int status = userMapper.updateUserById(user);
+        // 一旦用户修改了密码，需要重新设置它的 token
+        if (!old.getPassword().equals(user.getPassword())) {
+            authentication.deleteToken(old);
+            status = 2;         // 用户密码被修改
+        }
         return status;
+    }
+
+    public Object getUserInfo(int uid) {
+        HashMap<String, Object> hashMap = new HashMap();
+        User user = userMapper.selectUserById(uid);
+        if (user == null)
+            return null;
+        else {
+            int followCount = userMapper.getFollowCount(uid);
+            int starCount = userMapper.getStarCount(uid);
+            int likeCount = userMapper.getThumbCount(uid);
+            int fansCount = userMapper.getFansCount(uid);
+            hashMap.put("username", user.getUsername());
+            hashMap.put("email", user.getEmail());
+            hashMap.put("introduction", user.getIntroduction());
+            hashMap.put("authority", user.getAuthority());
+            hashMap.put("fans", fansCount);
+            hashMap.put("follow",followCount);
+            hashMap.put("star", starCount);
+            hashMap.put("like", likeCount);
+
+            return hashMap;
+        }
     }
 
 

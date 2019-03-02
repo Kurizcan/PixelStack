@@ -4,16 +4,13 @@ import com.alibaba.fastjson.JSONObject;
 import com.pixelstack.ims.common.Auth.Authentication;
 import com.pixelstack.ims.common.Auth.UserLoginToken;
 import com.pixelstack.ims.common.exception.Result_Error;
-import com.pixelstack.ims.common.exception.Result_Success;
 import com.pixelstack.ims.common.exception.InternalErrorException;
 import com.pixelstack.ims.common.exception.NotFoundException;
 import com.pixelstack.ims.domain.User;
 
 import com.pixelstack.ims.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 
@@ -31,6 +28,7 @@ public class UserController {
     @Autowired
     Authentication authentication;
 
+    @ResponseBody
     @PostMapping(value = {"/register"})
     public Object userRegister(User user) throws InternalErrorException {
         int status = userService.register(user);
@@ -39,8 +37,10 @@ public class UserController {
             throw new InternalErrorException("username or password null", Result_Error.ErrorCode.INSERT_ERROR.getCode());
         }
         else {
-            return new Result_Success(200, "SUSSESS EFFECT " + status + " row");
+            result.put("status", "200");
+            result.put("message", "注册成功");
         }
+        return result;
     }
 
     @PostMapping(value = {"/login"})
@@ -55,11 +55,16 @@ public class UserController {
             // 登陆成功，创建 token 并保存至 redis 中
             String token = authentication.createToken(login_user);
             if (token != null && authentication.storeToken(token, login_user.getUid())) {
-                HashMap <String, Object> data = new HashMap<String, Object>();
-                data.put("user", login_user);
-                data.put("token", token);
+                HashMap <String, Object> userInfo = new HashMap<String, Object>();
+                userInfo.put("uid", login_user.getUid());
+                userInfo.put("username", login_user.getUsername());
+                userInfo.put("email", login_user.getEmail());
+                userInfo.put("introduction", login_user.getIntroduction());
+                userInfo.put("status", login_user.getStatus());
+                userInfo.put("authority", login_user.getAuthority());
+                userInfo.put("token", token);
                 result.put("status", "200");
-                result.put("data", data);
+                result.put("userInfo", userInfo);
             }
             else {
                 result.put("status", "500");
@@ -70,37 +75,20 @@ public class UserController {
         return result;
     }
 
-    /*
-    @PostMapping(value = {"/vaild"})
-    public Object vaildUser(String token) {
-        User user = userService.vaild(token);
-        HashMap <String, Object> data = new HashMap<String, Object>();
+    @UserLoginToken
+    @GetMapping(value = {"/getUserInfo"})
+    public Object getUserInfo(int uid) {
+        Object userInfo = userService.getUserInfo(uid);
         result.clear();
-        if (user == null) {
-            result.put("status", "401");
-            result.put("message", "登陆已过期，请重新登陆");
+        if (userInfo == null) {
+            result.put("status", "40401");
+            result.put("message", "无此用户");
         }
         else {
             result.put("status", "200");
-            data.put("uid", user.getUid());
-            data.put("username", user.getUsername());
-            data.put("Authority", user.getAuthority());
-            result.put("data", data);
+            result.put("userInfo", userInfo);
         }
         return result;
-    }
-    */
-
-    @PostMapping(value = {"/getUserInfo"})
-    public Object getUserInfo(String token) {
-        return null;
-    }
-
-
-    @UserLoginToken
-    @PostMapping(value = {"/getMessage"})
-    public String getMessage() {
-        return "你已验证通过";
     }
 
 
@@ -108,14 +96,33 @@ public class UserController {
     @PostMapping(value = {"/modify"})
     public Object modify(User user) {
         result.clear();
-        if (userService.modify(user) == 0) {
-            result.put("status", "200");
-            result.put("message", "修改成功");
+        if (user.getUsername() == null || user.getPassword() == null || user.getEmail() == null) {
+            result.put("status", "500");
+            result.put("message", "信息修改不规范");
         }
         else {
-            result.put("status", "500");
-            result.put("message", "修改失败");
+            int status = userService.modify(user);
+            if (status == 0) {
+                result.put("status", "500");
+                result.put("message", "信息修改不规范");
+            }
+            else {
+                if (status == 2) {
+                    result.put("status", "201");
+                    result.put("message", "密码已修改，请重新登陆");
+                }
+                else {
+                    result.put("status", "200");
+                    result.put("message", "修改成功");
+                }
+            }
         }
         return result;
+    }
+
+    @UserLoginToken
+    @PostMapping(value = {"/getMessage"})
+    public String getMessage() {
+        return "你已验证通过";
     }
 }
