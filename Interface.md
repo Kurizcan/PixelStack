@@ -104,6 +104,58 @@
                 登陆失败直接走向服务器 500 错误，这里不做错误信息提示
             }
 
+## 管理员
+
+### 对用户账号状态进行管理
+
+    method:POST
+    http://localhost:8080/admin/manageCountStatus
+
+    status: normal/frozen/terminate
+
+    params(application/json): 
+            {
+                "101": "frozen",
+                "102": "frozen",
+                "103": "frozen", 
+                "104": "frozen",
+                "105": "frozen"
+            }
+
+    return:
+            {
+                "message": "修改状态成功",
+                "status": 200
+            }
+
+            {
+                "message": "修改状态失败",
+                "status": 200
+            }    
+
+
+### 创建管理员账号
+
+    method:POST
+    http://localhost:8080/admin/createCount
+
+    params: 
+        username:Curry
+        email:lcan@gmail.com
+        password:888
+        authority:xxx（只有超级管理员 root 角色才被允许）
+
+    return:
+            {
+                "message": "创建成功",
+                "status": 200
+            }
+
+            {
+                "message": "修改失败",
+                "status": 500
+            } 
+
 ### 获取用户信息列表
 
     method:GET
@@ -159,56 +211,3 @@
                 "prePage": 0,
                 "nextPage": 2
             }    
-
-## 管理员
-
-### 对用户账号状态进行管理
-
-    method:POST
-    http://localhost:8080/admin/manageCountStatus
-
-    status: normal/frozen/terminate
-
-    params(application/json): 
-            {
-                "101": "frozen",
-                "102": "frozen",
-                "103": "frozen", 
-                "104": "frozen",
-                "105": "frozen"
-            }
-
-    return:
-            {
-                "message": "修改状态成功",
-                "status": 200
-            }
-
-            {
-                "message": "修改状态失败",
-                "status": 200
-            }    
-
-
-### 创建管理员账号
-
-    method:POST
-    http://localhost:8080/admin/createCount
-
-    params: 
-        username:Curry
-        email:lcan@gmail.com
-        password:888
-        authority:xxx（只有超级管理员 root 角色才被允许）
-
-    return:
-            {
-                "message": "创建成功",
-                "status": 200
-            }
-
-            {
-                "message": "修改失败",
-                "status": 500
-            } 
-
