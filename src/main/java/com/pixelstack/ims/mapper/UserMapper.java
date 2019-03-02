@@ -2,6 +2,7 @@ package com.pixelstack.ims.mapper;
 
 import com.pixelstack.ims.domain.User;
 import com.pixelstack.ims.mapper.SqlProvider.CountSqlProvider;
+import com.pixelstack.ims.mapper.SqlProvider.UserSqlProvider;
 import org.apache.ibatis.annotations.*;
 
 public interface UserMapper {
@@ -16,8 +17,7 @@ public interface UserMapper {
     @Select("select * from tb_user_info where uid = #{uid}")
     public User selectUserById(@Param("uid") int uid);
 
-    @Update("update tb_user_info set username = #{username}, password = #{password}, " +
-            "email = #{email}, introduction = #{introduction} where uid = #{uid}")
+    @UpdateProvider(type = UserSqlProvider.class, method = "updateUserById")
     public int updateUserById(User user);
 
     @SelectProvider(type = CountSqlProvider.class, method = "getStarCount")

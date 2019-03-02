@@ -31,7 +31,7 @@ public class UserController {
     @ResponseBody
     @PostMapping(value = {"/register"})
     public Object userRegister(User user) throws InternalErrorException {
-        int status = userService.register(user);
+        int status = userService.register(user, "user");
         if (status == ERROR) {
             // 注册出现错误，抛出错误
             throw new InternalErrorException("username or password null", Result_Error.ErrorCode.INSERT_ERROR.getCode());

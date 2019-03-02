@@ -11,17 +11,21 @@ import java.util.HashMap;
 
 @Service
 public class UserService {
-    /**
-     * 用户注册
-     */
+
     @Autowired
     UserMapper userMapper;
 
     @Autowired
     Authentication authentication;
 
-    public int register(User user) throws InternalErrorException {
-        user.setAuthority("user");
+    /**
+     * 用户注册
+     * @param user
+     * @return
+     * @throws InternalErrorException
+     */
+    public int register(User user, String authority){
+        user.setAuthority(authority);
         user.setStatus("normal");
         return userMapper.addUser(user);
     }

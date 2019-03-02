@@ -2,7 +2,7 @@
 
 ## 用户
 
-### 获取用户信息
+### 获取用户信息详细列表
 
 
     method:GET
@@ -25,7 +25,7 @@
 
 ### 修改用户信息
 
-    method:GET
+    method:POST
     http://localhost:8080/user/modify
 
     params:
@@ -188,3 +188,27 @@
                 "message": "修改状态失败",
                 "status": 200
             }    
+
+
+### 创建管理员账号
+
+    method:POST
+    http://localhost:8080/admin/createCount
+
+    params: 
+        username:Curry
+        email:lcan@gmail.com
+        password:888
+        authority:xxx（只有超级管理员 root 角色才被允许）
+
+    return:
+            {
+                "message": "创建成功",
+                "status": 200
+            }
+
+            {
+                "message": "修改失败",
+                "status": 500
+            } 
+
