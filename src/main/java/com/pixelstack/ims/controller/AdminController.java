@@ -10,6 +10,8 @@ import com.pixelstack.ims.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping(value="/admin")
 public class AdminController {
@@ -21,8 +23,8 @@ public class AdminController {
 
     @JsonView(User.UserSimpleView.class)
     @UserLoginToken
-    @GetMapping(value = {"/getUserList"})
-    public Object getUserList(@RequestParam(defaultValue = "1") int pageNo, @RequestParam(defaultValue = "10") int pageSize, int type) {
+    @GetMapping(value = {"/getUserListByPage"})
+    public Object getUserListByPage(@RequestParam(defaultValue = "1") int pageNo, @RequestParam(defaultValue = "10") int pageSize, int type) {
         PageHelper.startPage(pageNo,pageSize);
         PageInfo<User> pageInfo = null;
         if (type == 0)
@@ -39,6 +41,20 @@ public class AdminController {
         result.put("lastPage", pageInfo.getNavigateLastPage());
         return result;
     }
+
+    @JsonView(User.UserSimpleView.class)
+    @UserLoginToken
+    @GetMapping(value = {"/getUserList"})
+    public Object getUserList(int type) {
+        List<User> userList = null;
+        if (type == 0)
+            userList = adminService.getUserList();
+        else if (type == 1)
+            userList = adminService.getAdminList();
+        result.put("userList", userList);
+        return result;
+    }
+
 
     @UserLoginToken
     @PostMapping(value = {"/manageCountStatus"})

@@ -72,7 +72,7 @@ public class UserService {
         return status;
     }
 
-    public Object getUserInfo(int uid) {
+    public HashMap getUserInfo(int uid) {
         HashMap<String, Object> hashMap = new HashMap();
         User user = userMapper.selectUserById(uid);
         if (user == null)

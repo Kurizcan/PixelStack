@@ -5,6 +5,8 @@ import com.pixelstack.ims.mapper.SqlProvider.CountSqlProvider;
 import com.pixelstack.ims.mapper.SqlProvider.UserSqlProvider;
 import org.apache.ibatis.annotations.*;
 
+import java.util.List;
+
 public interface UserMapper {
 
     @Insert("insert into tb_user_info(username,password,authority,email,status) " +
@@ -32,5 +34,7 @@ public interface UserMapper {
     @SelectProvider(type = CountSqlProvider.class, method = "getFollowCount")
     public int getFollowCount(@Param("uid") int uid);
 
+    @Select("select * from tb_user_info where authority = 'user'")
+    public List<User> getAllUser();
 
 }

@@ -9,6 +9,8 @@ import com.pixelstack.ims.mapper.AdminMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class AdminService extends UserService {
 
@@ -22,16 +24,18 @@ public class AdminService extends UserService {
      * 获取用户信息列表
      * @return
      */
-    public Page<User> getUserList() {
-        return adminMapper.getUserList();
+    public List<User> getUserList() {
+        //return adminMapper.getUserList(); 分页 Page<User>
+        return adminMapper.getAllUser();
     }
 
     /**
      * 获取管理员用户信息列表
      * @return
      */
-    public Page<User> getAdminList() {
-        return adminMapper.getAdminList();
+    public List<User> getAdminList() {
+        //return adminMapper.getAdminList();
+        return adminMapper.getAllAdmin();
     }
 
     /**
