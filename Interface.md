@@ -67,6 +67,16 @@
             }
 
             {
+                "message": "账户被冻结",
+                "status": "501"
+            }
+
+            {
+                "message": "账户被冻结",
+                "status": "502"
+            }
+
+            {
                 "userInfo": {
                     "uid": 102,
                     "authority": "user",
@@ -103,6 +113,69 @@
             {
                 登陆失败直接走向服务器 500 错误，这里不做错误信息提示
             }
+
+### 上传照片
+
+    method:POST
+    http://localhost:8080/user/POST
+
+    form-data: file (可批量)
+
+    params:
+        uid:104
+        title:YangMi
+
+    return:
+            {
+                "fail": 0,
+                "upload": [
+                    {
+                        "iid": 165,
+                        "title": "YangMi",
+                        "author": "kobe",
+                        "upload": "2019-03-03T08:40:48.223+0000",
+                        "url": "C:\\Users\\asus\\Desktop\\users\\kobe\\2019-03-03\\original\\IMG_20170222_195652.jpg",
+                        "count": 0
+                    },
+                    {
+                        "iid": 166,
+                        "title": "YangMi",
+                        "author": "kobe",
+                        "upload": "2019-03-03T08:40:48.223+0000",
+                        "url": "C:\\Users\\asus\\Desktop\\users\\kobe\\2019-03-03\\original\\IMG_20170224_154250.jpg",
+                        "count": 0
+                    },
+                    {
+                        "iid": 167,
+                        "title": "YangMi",
+                        "author": "kobe",
+                        "upload": "2019-03-03T08:40:48.223+0000",
+                        "url": "C:\\Users\\asus\\Desktop\\users\\kobe\\2019-03-03\\original\\IMG_20170224_175425.jpg",
+                        "count": 0
+                    },
+                    {
+                        "iid": 168,
+                        "title": "YangMi",
+                        "author": "kobe",
+                        "upload": "2019-03-03T08:40:48.223+0000",
+                        "url": "C:\\Users\\asus\\Desktop\\users\\kobe\\2019-03-03\\original\\IMG_20170223_171111.jpg",
+                        "count": 0
+                    },
+                    {
+                        "iid": 169,
+                        "title": "YangMi",
+                        "author": "kobe",
+                        "upload": "2019-03-03T08:40:48.223+0000",
+                        "url": "C:\\Users\\asus\\Desktop\\users\\kobe\\2019-03-03\\original\\IMG_20170222_125824.jpg",
+                        "count": 0
+                    }
+                ],
+                "success": 5,
+                "errors": [],
+                "status": "200"
+            }    
+
+            发生上传大小超过阀值等错误时，将出现 500 状态
 
 ## 管理员
 
@@ -162,52 +235,81 @@
     http://localhost:8080/admin/getUserList
 
     params:
-        pageNo:1
-        pageSize:5
         type:1 (管理员用户信息) 0 (普通用户信息)
 
     return:
             {
-                "total": 10,
                 "userList": [
                     {
                         "uid": 101,
                         "username": "Lcanboom",
                         "authority": "user",
                         "email": "lcan@gmail.com",
-                        "status": "normal"
+                        "status": "frozen"
                     },
                     {
                         "uid": 102,
                         "username": "Yangmi",
                         "authority": "user",
                         "email": "YangMi@gmail.com",
-                        "status": "normal"
+                        "status": "frozen"
                     },
                     {
                         "uid": 103,
                         "username": "Harden",
                         "authority": "user",
                         "email": "lcan@gmail.com",
-                        "status": "normal"
+                        "status": "frozen"
                     },
                     {
                         "uid": 104,
                         "username": "kobe",
                         "authority": "user",
                         "email": "kobe@gmail.com",
-                        "status": "normal"
+                        "status": "frozen"
                     },
                     {
                         "uid": 105,
                         "username": "Har",
                         "authority": "user",
                         "email": "lcan@gmail.com",
-                        "status": "terminate"
+                        "status": "frozen"
+                    },
+                    {
+                        "uid": 106,
+                        "username": "XXXXG",
+                        "authority": "user",
+                        "email": "XXXG@gmail.com",
+                        "status": "normal"
+                    },
+                    {
+                        "uid": 107,
+                        "username": "XXXA",
+                        "authority": "user",
+                        "email": "lcan@gmail.com",
+                        "status": "normal"
+                    },
+                    {
+                        "uid": 108,
+                        "username": "VAVA",
+                        "authority": "user",
+                        "email": "lcan@gmail.com",
+                        "status": "normal"
+                    },
+                    {
+                        "uid": 109,
+                        "username": "Paul",
+                        "authority": "user",
+                        "email": "lcan@gmail.com",
+                        "status": "normal"
+                    },
+                    {
+                        "uid": 110,
+                        "username": "Dawe",
+                        "authority": "user",
+                        "email": "lcan@gmail.com",
+                        "status": "normal"
                     }
-                ],
-                "curPage": 1,
-                "lastPage": 2,
-                "prePage": 0,
-                "nextPage": 2
-            }    
+                ]
+            }  
+
