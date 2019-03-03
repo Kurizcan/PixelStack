@@ -117,7 +117,7 @@
 ### 上传照片
 
     method:POST
-    http://localhost:8080/user/POST
+    http://localhost:8080/user/upload
 
     form-data: file (可批量)
 
@@ -239,7 +239,7 @@
 
     return:
             {
-                "userList": [
+                "user List": [
                     {
                         "uid": 101,
                         "username": "Lcanboom",
