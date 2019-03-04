@@ -502,3 +502,31 @@
                     }
                 ]
             }
+
+### 用户首页显示
+
+    method:GET
+    http://localhost:8080/image/getImageListByUid
+
+    params:
+        uid:104
+
+    return:
+            {
+                "imageList": [
+                    {
+                        "star": 0,
+                        "iid": 100,
+                        "thumb": 0,
+                        "count": 0,
+                        "url": "C:\\Users\\asus\\Desktop\\users\\kobe\\2019-03-03\\bigIMG_20170222_125814.jpg"
+                    },
+                    {
+                        "star": 0,
+                        "iid": 102,
+                        "thumb": 0,
+                        "count": 0,
+                        "url": "C:\\Users\\asus\\Desktop\\users\\kobe\\2019-03-03\\bigIMG_20170222_195652.jpg"
+                    }        
+                ]
+            }            
