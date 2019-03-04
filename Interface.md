@@ -177,6 +177,44 @@
 
             发生上传大小超过阀值等错误时，将出现 500 状态
 
+### 删除图片
+
+    method:POST
+    http://localhost:8080/user/deleteImage
+
+    params:
+        iid:109
+
+    {
+        "message": "删除失败",
+        "status": 500
+    }
+
+    {
+        "message": "删除成功",
+        "status": 200
+    }    
+
+### 添加标签，标题
+
+    method:POST
+    http://localhost:8080/user/addTagsandTitle
+
+    params:
+        {
+            "pids":[116, 115],
+            "tags":["大骚伟", "孙燕姿"],
+            "title": "wnba"
+        }
+
+    return 
+        {
+            "titleIsAdd": "Yes",
+            "tagIsAdd": "Yes",
+            "status": 200
+        }
+
+
 ## 管理员
 
 ### 对用户账号状态进行管理
