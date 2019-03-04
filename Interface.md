@@ -195,7 +195,7 @@
         "status": 200
     }    
 
-### 添加标签，标题
+### 添加标签
 
     method:POST
     http://localhost:8080/user/addTagsandTitle
@@ -204,12 +204,10 @@
         {
             "pids":[116, 115],
             "tags":["大骚伟", "孙燕姿"],
-            "title": "wnba"
         }
 
     return 
         {
-            "titleIsAdd": "Yes",
             "tagIsAdd": "Yes",
             "status": 200
         }
