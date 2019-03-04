@@ -1,8 +1,14 @@
 package com.pixelstack.ims.service;
 
+import com.alibaba.fastjson.JSONObject;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.pixelstack.ims.common.ImageHelper.ImgResizeUtil;
 import com.pixelstack.ims.domain.Image;
 import com.pixelstack.ims.mapper.ImageMapper;
+import com.pixelstack.ims.mapper.StarMapper;
+import com.pixelstack.ims.mapper.ThumbMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,9 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
+import java.util.*;
 
 @Service
 public class ImageService {
@@ -29,6 +33,12 @@ public class ImageService {
 
     @Autowired
     ImgResizeUtil imgResizeUtil;
+
+    @Autowired
+    ThumbMapper thumbMapper;
+
+    @Autowired
+    StarMapper starMapper;
 
     public boolean isImageAllowed(String imageExt) {
         for (String ext : IMAGE_FILE_EXT) {
@@ -103,10 +113,75 @@ public class ImageService {
         }
     }
 
-    public String formatDate(Date date, int index, int end) {
-        StringBuffer date_buffer = new StringBuffer(date.toString());
-        return date_buffer.delete(index, end).toString();// 11, 24
+    public boolean deleteImageByiid(int iid) {
+        if (imageMapper.deleteImage(iid) == 0)
+            return false;
+        else
+            return true;
     }
 
+    public boolean addTitle(int pids, String titles) {
+        if (imageMapper.addTiltle(titles, pids) == 0)
+            return false;
+        else
+            return true;
+    }
+
+    public Object getImageDetailByiid(int iid) {
+        HashMap<String, Object> details = new HashMap<>();
+        int star = 0;
+        int thumb = 0;
+        List tags = new ArrayList();
+        Image image = imageMapper.getImageByiid(iid);
+        if (image == null)
+            return null;
+        star = imageMapper.getImageStarCount(iid);
+        thumb = imageMapper.getImageThumbCount(iid);
+        tags = imageMapper.getImageAllTagsByiid(iid);
+        details.put("title", image.getTitle());
+        details.put("author", image.getAuthor());
+        details.put("upload", this.getNormalDate(image.getUpload()));
+        details.put("url", image.getUrl());
+        details.put("count", image.getCount());
+        details.put("tags", tags);
+        details.put("star", star);
+        details.put("thumb", thumb);
+        return details;
+    }
+
+    public PageInfo<Map<String,Object>> getImageList(int pageNo, int pageSize) {
+        PageHelper.startPage(pageNo,pageSize);
+        PageInfo<Map<String,Object>> pageInfo = new PageInfo<>(imageMapper.getImageList());  // 根据用户 id 查询
+        List<Map<String,Object>> list = pageInfo.getList();
+        Iterator iterator = list.iterator();
+        while (iterator.hasNext()) {
+            Map<String,Object> imageMap = (Map<String,Object>) iterator.next();
+            this.makeUp(imageMap);
+        }
+        return pageInfo;
+    }
+
+    private String getNormalDate(Date date) {
+        return date.toString().replace(date.toString().substring(11, 24), "");
+    }
+
+    private void makeUp(Map<String,Object> imageMap) {
+        int star = starMapper.getStarByiid((Integer) imageMap.get("iid"));
+        int thumb = thumbMapper.getThumByiid((Integer) imageMap.get("iid"));
+        String smallUrl = imageMap.get("url").toString().replace("original", "small");
+        imageMap.put("url", smallUrl);
+        imageMap.put("star", star);
+        imageMap.put("thumb", thumb);
+    }
+
+    public List<Map<String,Object>> getImageListByUid(int uid) {
+        List<Map<String,Object>> mapList = (List<Map<String,Object>>) imageMapper.getImageListByUid(uid);
+        Iterator iterator = mapList.iterator();
+        while (iterator.hasNext()) {
+            Map<String,Object> imageMap = (Map<String,Object>) iterator.next();
+            this.makeUp(imageMap);
+        }
+        return mapList;
+    }
 
 }

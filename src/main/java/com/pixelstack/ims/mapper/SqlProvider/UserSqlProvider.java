@@ -1,6 +1,7 @@
 package com.pixelstack.ims.mapper.SqlProvider;
 
 import com.alibaba.fastjson.JSONObject;
+import com.pixelstack.ims.domain.User;
 import org.apache.ibatis.jdbc.SQL;
 import java.util.Iterator;
 import java.util.Map;
@@ -15,7 +16,8 @@ public class UserSqlProvider {
                 .toString();
     }
 
-    public String updateUserById() {
+    public String updateUserById(User user) {
+        /*
         return new SQL()
                 .UPDATE("tb_user_info")
                 .SET("username = #{username}")
@@ -24,6 +26,24 @@ public class UserSqlProvider {
                 .SET("introduction = #{introduction}")
                 .WHERE("uid = #{uid}")
                 .toString();
+        */
+        return new SQL() {{
+            UPDATE("tb_user_info");
+            if (user.getPassword() != null) {
+                SET("password = #{password}");
+            }
+            if (user.getUsername() != null) {
+                SET("username = #{username}");
+            }
+            if (user.getEmail() != null) {
+                SET("email = #{email}");
+            }
+            if (user.getIntroduction() != null) {
+                SET("introduction = #{introduction}");
+            }
+            WHERE("uid = #{uid}");
+        }}.toString();
+
     }
 
     public String getUsers() {

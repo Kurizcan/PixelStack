@@ -5,25 +5,26 @@ import com.pixelstack.ims.mapper.TagMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
-/**
- * 普通用户功能
- */
-
 @Service
-public class GeneralService extends UserService {
+public class TagService {
 
     @Autowired
     TagMapper tagMapper;
 
 
-    public boolean addTags(List<Tag> tags) {
-        if (tagMapper.addTags(tags) == 0)
+    public boolean addTagsRelate(int iid, int tid) {
+        if (tagMapper.addTagsRelate(iid, tid) == 0)
             return false;
         else
             return true;
     }
+
+    public Tag selectTagByName(String name) {
+        return tagMapper.selectTagByName(name);
+    }
+
 
 }

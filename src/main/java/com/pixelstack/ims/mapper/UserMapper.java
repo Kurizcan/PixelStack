@@ -37,4 +37,5 @@ public interface UserMapper {
     @Select("select * from tb_user_info where authority = 'user'")
     public List<User> getAllUser();
 
+
 }

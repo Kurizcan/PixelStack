@@ -384,7 +384,7 @@
 ### 显示该图片的所有评论
 
     method:GET
-        http://localhost:8080/Comment/getCommentsByiid
+    http://localhost:8080/Comment/getCommentsByiid
 
     params:
         iid:153
@@ -530,3 +530,21 @@
                     }        
                 ]
             }            
+
+### 添加评论
+
+    method:Post
+    http://localhost:8080/Comment/add
+
+    params:
+        iid:152
+        uid:106
+        content:cool   
+
+    return:
+            {
+                "message": "评论成功",
+                "status": 200
+            }
+
+            失败将发生 500 错误
