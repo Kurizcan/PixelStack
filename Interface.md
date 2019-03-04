@@ -349,3 +349,34 @@
                 ]
             }  
 
+
+## 图片
+
+### 显示图片详细信息
+
+    method:GET
+        http://localhost:8080/image/getImageDetails
+
+
+    params:
+        iid:153
+
+    return:
+            {
+                "message": "图片不存在",
+                "status": 500
+            }    
+            
+            {
+                "star": 0,
+                "upload": "Sun Mar 03 2019",
+                "thumb": 0,
+                "author": "kobe",
+                "count": 0,
+                "title": "YangMi",
+                "url": "C:\\Users\\asus\\Desktop\\users\\kobe\\2019-03-03\\original\\IMG_20170224_190901.jpg",
+                "tags": [
+                    "大骚伟",
+                    "大苞米"
+                ]
+            }                
