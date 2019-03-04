@@ -380,3 +380,125 @@
                     "大苞米"
                 ]
             }                
+
+### 显示该图片的所有评论
+
+    method:GET
+        http://localhost:8080/Comment/getCommentsByiid
+
+    params:
+        iid:153
+
+    return:
+            {
+                "comments": [
+                    {
+                        "cdate": "2019-03-04",
+                        "content": "great",
+                        "username": "Curry"
+                    },
+                    {
+                        "cdate": "2019-03-04",
+                        "content": "wonderful",
+                        "username": "Dawe"
+                    }
+                ],
+                "status": 200
+            }
+
+            当该图无评论时
+            {
+                "comments": [],
+                "status": 200
+            }
+
+### 首页图片显示
+
+    method:GET
+    http://localhost:8080/image/getImageList
+
+    params:
+        pageNo:2
+        pageSize:30
+        若不带参数，默认pageSize = 60， pageNo = 1
+
+    return:
+            {
+                "total": 64,
+                "curPage": 2,
+                "lastPage": 3,
+                "prePage": 1,
+                "nextPage": 3,
+                "imageList": [
+                    {
+                        "star": 0,
+                        "iid": 144,
+                        "thumb": 0,
+                        "count": 0,
+                        "url": "C:\\Users\\asus\\Desktop\\users\\kobe\\2019-03-03\\original\\IMG_20170224_190901.jpg"
+                    },
+                    {
+                        "star": 0,
+                        "iid": 145,
+                        "thumb": 0,
+                        "count": 0,
+                        "url": "C:\\Users\\asus\\Desktop\\users\\kobe\\2019-03-03\\original\\IMG_20170222_161223.jpg"
+                    },
+                    {
+                        "star": 0,
+                        "iid": 146,
+                        "thumb": 0,
+                        "count": 0,
+                        "url": "C:\\Users\\asus\\Desktop\\users\\kobe\\2019-03-03\\original\\IMG_20170224_154309.jpg"
+                    },
+                    {
+                        "star": 0,
+                        "iid": 147,
+                        "thumb": 0,
+                        "count": 0,
+                        "url": "C:\\Users\\asus\\Desktop\\users\\kobe\\2019-03-03\\original\\IMG_20170223_170105.jpg"
+                    },
+                    {
+                        "star": 0,
+                        "iid": 148,
+                        "thumb": 0,
+                        "count": 0,
+                        "url": "C:\\Users\\asus\\Desktop\\users\\kobe\\2019-03-03\\original\\IMG_20170223_171111.jpg"
+                    },
+                    {
+                        "star": 0,
+                        "iid": 149,
+                        "thumb": 0,
+                        "count": 0,
+                        "url": "C:\\Users\\asus\\Desktop\\users\\kobe\\2019-03-03\\original\\IMG_20170224_190901.jpg"
+                    },
+                    {
+                        "star": 0,
+                        "iid": 150,
+                        "thumb": 1,
+                        "count": 0,
+                        "url": "C:\\Users\\asus\\Desktop\\users\\kobe\\2019-03-03\\original\\IMG_20170222_161223.jpg"
+                    },
+                    {
+                        "star": 0,
+                        "iid": 151,
+                        "thumb": 1,
+                        "count": 0,
+                        "url": "C:\\Users\\asus\\Desktop\\users\\kobe\\2019-03-03\\original\\IMG_20170224_154309.jpg"
+                    },
+                    {
+                        "star": 3,
+                        "iid": 152,
+                        "thumb": 4,
+                        "count": 0,
+                        "url": "C:\\Users\\asus\\Desktop\\users\\kobe\\2019-03-03\\original\\IMG_20170223_170105.jpg"
+                    },
+                    {
+                        "star": 0,
+                        "iid": 153,
+                        "thumb": 0,
+                        "count": 0,
+                        "url": "C:\\Users\\asus\\Desktop\\users\\kobe\\2019-03-03\\original\\IMG_20170223_171111.jpg"
+                    }
+                ]
+            }
