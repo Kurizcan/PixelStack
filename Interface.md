@@ -531,6 +531,31 @@
                 ]
             }            
 
+### 用户查看图片详情
+
+    method:GET
+    http://localhost:8080/image/getImageDetailsByUid
+
+    params:
+        uid:108
+        iid:152
+
+    {
+        "star": 3,
+        "isThumb": false, 
+        "isStar": false,
+        "upload": "Sun Mar 03 2019",
+        "thumb": 4,
+        "author": "kobe",
+        "count": 0,
+        "title": "wnba",
+        "url": "C:\\Users\\asus\\Desktop\\users\\kobe\\2019-03-03\\original\\IMG_20170223_170105.jpg",
+        "tags": [
+            "大骚伟",
+            "孙燕姿"
+        ]
+    }    
+
 ### 添加评论
 
     method:Post
@@ -548,3 +573,37 @@
             }
 
             失败将发生 500 错误
+
+### 收藏
+
+    method:Post
+    http://localhost:8080/image/isStar
+
+    params:
+        uid:108
+        iid:152
+        isStar:false（取消收藏）true（收藏）
+
+    return:
+            {
+                "isStar": false,
+                "status": 200
+            }   
+
+        500 错误
+
+### 点赞
+
+    method:Post
+    http://localhost:8080/image/isThumb
+
+    params:
+        uid:108
+        iid:152
+        isThumb:false    
+
+    return:
+            {
+                "isThumb": false,
+                "status": 200
+            }        
