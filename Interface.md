@@ -244,6 +244,56 @@
                 "status": 200
             }    
 
+### 获取用户关注列表
+
+    method:GET
+    http://localhost:8080/user/getFollowers
+
+    params:
+        uid:104
+
+    return:
+            {
+                "followers": [
+                    {
+                        "fid": 108,
+                        "introduction": "fuckkkkk",
+                        "username": "kobe"
+                    },
+                    {
+                        "fid": 105,
+                        "introduction": null,
+                        "username": "Har"
+                    }
+                ],
+                "status": 200
+            }
+
+            {
+                "followers": []
+                "status": 200
+            }            
+
+### 获取粉丝列表
+
+    method:GET
+    http://localhost:8080/user/getFans
+
+    params:
+        uid:104
+
+    return:
+            {
+                "fans": [
+                    {
+                        "uid": 108,
+                        "introduction": null,
+                        "username": "VAVA"
+                    }
+                ],
+                "status": 200
+            }            
+
 ## 管理员
 
 ### 对用户账号状态进行管理
@@ -399,18 +449,21 @@
             }    
             
             {
-                "star": 0,
+                "isThumb": false,
+                "isFollow": false,
+                "star": 3,
+                "isStar": false,
                 "upload": "Sun Mar 03 2019",
-                "thumb": 0,
-                "author": "kobe",
+                "thumb": 3,
+                "author": "Paul",
                 "count": 0,
-                "title": "YangMi",
-                "url": "C:\\Users\\asus\\Desktop\\users\\kobe\\2019-03-03\\original\\IMG_20170224_190901.jpg",
+                "title": "wnba",
+                "url": "C:\\Users\\asus\\Desktop\\users\\kobe\\2019-03-03\\original\\IMG_20170223_170105.jpg",
                 "tags": [
                     "大骚伟",
-                    "大苞米"
+                    "孙燕姿"
                 ]
-            }                
+            }               
 
 ### 显示该图片的所有评论
 
@@ -560,34 +613,7 @@
                         "url": "C:\\Users\\asus\\Desktop\\users\\kobe\\2019-03-03\\bigIMG_20170222_195652.jpg"
                     }        
                 ]
-            }            
-
-### 用户查看图片详情
-
-    method:GET
-    http://localhost:8080/image/getImageDetailsByUid
-
-    params:
-        uid:108
-        iid:152
-
-    return:
-            {
-                "isThumb": false,
-                "isFollow": false,
-                "star": 3,
-                "isStar": false,
-                "upload": "Sun Mar 03 2019",
-                "thumb": 3,
-                "author": "Paul",
-                "count": 0,
-                "title": "wnba",
-                "url": "C:\\Users\\asus\\Desktop\\users\\kobe\\2019-03-03\\original\\IMG_20170223_170105.jpg",
-                "tags": [
-                    "大骚伟",
-                    "孙燕姿"
-                ]
-            }   
+            }               
 
 ### 添加评论
 
