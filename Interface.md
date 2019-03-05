@@ -23,6 +23,22 @@
                 "status": "200"
             }
 
+### 根据用户名查找返回用户 id
+
+    method:GET
+    http://localhost:8080/user/getUid?username=VAVAa
+
+    return:
+            {
+                "message": "查无此人",
+                "status": 500
+            }
+
+            {
+                "uid": 108,
+                "status": 200
+            }
+
 ### 修改用户信息
 
     method:POST
