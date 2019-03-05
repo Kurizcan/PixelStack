@@ -14,16 +14,14 @@ import com.pixelstack.ims.service.ImageService;
 import com.pixelstack.ims.service.TagService;
 import com.pixelstack.ims.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 @RestController
 @RequestMapping(value="/user")     // 通过这里配置使下面的映射都在 /user 下
@@ -125,7 +123,6 @@ public class UserController {
         return result;
     }
 
-
     @UserLoginToken
     @PostMapping(value = {"/modify"})
     public Object modify(User user) {
@@ -147,7 +144,6 @@ public class UserController {
         }
         return result;
     }
-
 
     @UserLoginToken
     @PostMapping(value = {"/upload"})
@@ -197,71 +193,94 @@ public class UserController {
     }
 
     @UserLoginToken
-    @Transactional
     @PostMapping(value = {"/addTagsandTitle"})
-    public Object addTagsandTitle(@RequestBody JSONObject jsonObject) throws IOException{
+    public Object addTags(@RequestBody JSONObject jsonObject) throws IOException{
         ArrayList tags = (ArrayList) jsonObject.get("tags");
         ArrayList pids = (ArrayList) jsonObject.get("pids");
-        List<Tag> tagsList = new ArrayList();
-        List<Tag> newTagList = new ArrayList<>();
-        int i, j;
-        //newTagList = null;
         result.clear();
-        for (i = 0; i < tags.size(); i++) {
-            Tag tag = tagService.selectTagByName(tags.get(i).toString());
-            System.out.println(10);
-            if (tag == null) {
-                tag = new Tag();
-                tag.setTagname(tags.get(i).toString());
-                newTagList.add(tag);
-            }
-            else {
-                System.out.println(5);
-                tagsList.add(tag);
-            }
+        if (pids == null || tags == null) {
+            result.put("status", 500);
+            result.put("tagIsAdd", "No");
         }
-        try {
-            System.out.println(6);
-            if (newTagList != null) {
-
-                if (!generalService.addTags(newTagList)) {
-                    result.put("status", 501);
-                    result.put("message", "加入标签失败");
-                }
-
-                // 新标签插入成功
-                for (i = 0; i < newTagList.size(); i++) {
-                    tagsList.add(newTagList.get(i));
-                    System.out.println(1);
-                }
-
-                System.out.println(2);
-            }
-
-            System.out.println(7);
-            System.out.println(tagsList.size());
-
-            for (i = 0; i < tagsList.size(); i++) {
-                System.out.println(8);
-                for (j = 0; j < pids.size(); j++) {
-                    System.out.println(9);
-                    if (!tagService.addTagsRelate((int)pids.get(j), tagsList.get(i).getTid())) {
-                        result.put("status", 502);
-                        result.put("message", "加入标签-相片关系失败");
-                    }
-                    System.out.println(3);
-                }
-            }
-
+        else if (generalService.addTags(tags, pids)) {
             result.put("status", 200);
             result.put("tagIsAdd", "Yes");
-
-        } catch (Exception e) {
-            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
         }
         return result;
     }
 
+    @GetMapping(value = {"/getUid"})
+    public Object getUidByUsername(String username) {
+        Integer uid = userService.getUidByUsername(username);
+        result.clear();
+        if (uid == null) {
+            result.put("status", 500);
+            result.put("message", "查无此人");
+        }
+        else {
+            result.put("status", 200);
+            result.put("uid", uid);
+        }
+        return result;
+    }
+
+    @UserLoginToken
+    @PostMapping(value = {"/isFollow"})
+    public Object isFollow(int uid, int fid, boolean isFollow) {
+        result.clear();
+        if (generalService.followOther(uid, fid, isFollow)) {
+            result.put("status", 200);
+            result.put("isFollow", isFollow);
+        }
+        else {
+            result.put("status", 500);
+            result.put("message", "error");
+        }
+        return result;
+    }
+
+    @PostMapping(value = {"/followRelate"})
+    public Object followRelate(@RequestParam(defaultValue = "0") int uid, @RequestParam(defaultValue = "0") int fid) {
+        boolean isFollow = false;
+        result.clear();
+        if (fid != 0 && generalService.Isfollow(uid, fid))
+            isFollow = true;
+        result.put("status", 200);
+        result.put("isFollow", isFollow);
+        return result;
+    }
+
+    @UserLoginToken
+    @GetMapping(value = {"getFollowers"})
+    public Object getFollowers(int uid) {
+        List<Map<String, Object>> followers = generalService.getFollowers(uid);
+        result.clear();
+        if (followers == null) {
+            result.put("status", 500);
+            result.put("message", "error");
+        }
+        else {
+            result.put("followers", followers);
+            result.put("status", 200);
+        }
+        return result;
+    }
+
+    @UserLoginToken
+    @GetMapping(value = {"getFans"})
+    public Object getFans(int uid) {
+        List<Map<String, Object>> fans = generalService.getFans(uid);
+        result.clear();
+        if (fans == null) {
+            result.put("status", 500);
+            result.put("message", "maybe no fans");
+        }
+        else {
+            result.put("fans", fans);
+            result.put("status", 200);
+        }
+        return result;
+    }
 
 
 }

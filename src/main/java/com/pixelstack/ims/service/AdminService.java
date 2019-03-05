@@ -6,6 +6,7 @@ import com.github.pagehelper.Page;
 import com.pixelstack.ims.common.Auth.Authentication;
 import com.pixelstack.ims.domain.User;
 import com.pixelstack.ims.mapper.AdminMapper;
+import com.pixelstack.ims.mapper.CommentMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +20,9 @@ public class AdminService extends UserService {
 
     @Autowired
     Authentication authentication;
+
+    @Autowired
+    CommentMapper commentMapper;
 
     /**
      * 获取用户信息列表
@@ -64,5 +68,23 @@ public class AdminService extends UserService {
             return this.register(user, "admin");
         else
             return 0;
+    }
+
+    /**
+     * 对被举报的用户评论进行审查
+     * @param cid
+     * @param reportRight
+     * @return
+     */
+    public boolean dealWithReport(int cid, boolean reportRight) {
+        int status;
+        if (reportRight)
+            status = commentMapper.deleteComment(cid);
+        else
+            status = commentMapper.updateReport(reportRight, cid);
+        if (status == 0)
+            return false;
+        else
+            return true;
     }
 }

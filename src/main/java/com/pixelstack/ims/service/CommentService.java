@@ -43,4 +43,19 @@ public class CommentService {
 
     }
 
+    public boolean reportComment(int cid, boolean isReport) {
+        if (commentMapper.updateReport(isReport, cid) == 0)
+            return false;
+        else
+            return true;
+    }
+
+    public List<Map<String, Object>> getCommentWithReport() {
+        List<Map<String, Object>> commentList = commentMapper.getCommentWithReport();
+        if (commentList == null)
+            return null;
+        else
+            return commentList;
+    }
+
 }

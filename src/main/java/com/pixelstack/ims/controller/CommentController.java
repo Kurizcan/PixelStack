@@ -51,4 +51,37 @@ public class CommentController {
         return result;
     }
 
+    @UserLoginToken
+    @ResponseBody
+    @PostMapping(value = {"/report"})
+    public Object report(int cid) {
+        result.clear();
+        if (commentService.reportComment(cid, true)) {
+            result.put("status", 200);
+            result.put("message", "举报成功");
+        }
+        else {
+            result.put("status", 500);
+            result.put("message", "举报失败");
+        }
+        return result;
+    }
+
+    @UserLoginToken
+    @ResponseBody
+    @GetMapping(value = {"/getReportComment"})
+    public Object getReportComment() {
+        List<Map<String, Object>> comments = commentService.getCommentWithReport();
+        result.clear();
+        if (comments == null) {
+            result.put("status", 500);
+            result.put("message", "查询失败");
+        }
+        else {
+            result.put("status", 200);
+            result.put("comments", comments);
+        }
+        return result;
+    }
+
 }

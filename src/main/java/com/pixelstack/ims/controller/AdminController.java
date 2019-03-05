@@ -87,4 +87,18 @@ public class AdminController {
         return result;
     }
 
+    @UserLoginToken
+    @PostMapping(value = {"/dealWithReport"})
+    public Object dealWithReport(int cid, boolean reportRight) {
+        result.clear();
+        if (adminService.dealWithReport(cid, reportRight)) {
+            result.put("status", 200);
+            result.put("message", "处理成功");
+        }
+        else {
+            result.put("status", 500);
+            result.put("message", "处理失败");
+        }
+        return result;
+    }
 }

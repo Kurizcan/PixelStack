@@ -95,5 +95,15 @@ public class UserService {
         }
     }
 
+    /**
+     * 根据 username 返回 uid
+     * @param username
+     * @return
+     */
+    public Integer getUidByUsername(String username) {
+        Integer uid = userMapper.getUidByUsername(username);
+        return uid;
+    }
+
 
 }

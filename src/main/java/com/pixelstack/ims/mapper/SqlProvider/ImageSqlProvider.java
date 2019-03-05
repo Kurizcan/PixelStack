@@ -1,11 +1,8 @@
 package com.pixelstack.ims.mapper.SqlProvider;
-
 import com.pixelstack.ims.domain.Tag;
 import org.apache.ibatis.jdbc.SQL;
 
 import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -56,6 +53,24 @@ public class ImageSqlProvider {
         return totalSql;
     }
     */
+
+    public String selectMyStars(Map map) {
+        List<Integer> iids = (List<Integer>) map.get("list");
+        StringBuilder sb = new StringBuilder();
+        sb.append("select iid, count, url from tb_image_info where iid in (");
+        MessageFormat mf = new MessageFormat(
+                "#'{'list[{0}]} "
+        );
+        for (int i = 0; i < iids.size(); i++) {
+            sb.append(mf.format(new Object[]{i}));
+            if (i < iids.size() - 1) {
+                sb.append(",");
+            }
+        }
+        sb.append(")");
+        //System.out.println(sb.toString());
+        return sb.toString();
+    }
 
 
 }

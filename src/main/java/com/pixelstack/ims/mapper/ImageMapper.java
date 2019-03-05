@@ -1,15 +1,10 @@
 package com.pixelstack.ims.mapper;
 
 import com.github.pagehelper.Page;
-import com.pixelstack.ims.domain.Comment;
 import com.pixelstack.ims.domain.Image;
-import com.pixelstack.ims.domain.Tag;
-import com.pixelstack.ims.domain.User;
 import com.pixelstack.ims.mapper.SqlProvider.ImageSqlProvider;
-import com.pixelstack.ims.mapper.SqlProvider.UserSqlProvider;
 import org.apache.ibatis.annotations.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -47,5 +42,19 @@ public interface ImageMapper {
     @Select("select iid, url, count from tb_image_info i, tb_user_info u where uid = #{uid} and u.username = i.author")
     @ResultType(List.class)
     List<Map<String,Object>> getImageListByUid(int uid);
+
+    @Select("SELECT uid FROM tb_user_info u, tb_image_info i WHERE u.username = i.author AND iid = #{iid} ")
+    @ResultType(Integer.class)
+    public Integer getUidbyImage(int iid);
+
+    @SelectProvider(type = ImageSqlProvider.class, method = "selectMyStars")
+    @ResultType(List.class)
+    public List<Map<String, Object>> selectMyStars(@Param("list") List<Integer> list);
+
+    @Select("SELECT tb_tag_relate.iid, url, count from tb_tag, tb_tag_relate, tb_image_info " +
+            "WHERE tb_tag.tid = tb_tag_relate.tid AND " +
+            "tagname = #{tagname} AND tb_image_info.iid = tb_tag_relate.iid")
+    @ResultType(List.class)
+    public List<Map<String, Object>> getListByTagName(String tagname);
 
 }

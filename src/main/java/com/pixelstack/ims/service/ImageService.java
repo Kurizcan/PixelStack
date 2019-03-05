@@ -9,6 +9,7 @@ import com.pixelstack.ims.domain.Image;
 import com.pixelstack.ims.mapper.ImageMapper;
 import com.pixelstack.ims.mapper.StarMapper;
 import com.pixelstack.ims.mapper.ThumbMapper;
+import com.pixelstack.ims.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,6 +40,9 @@ public class ImageService {
 
     @Autowired
     StarMapper starMapper;
+
+    @Autowired
+    UserMapper userMapper;
 
     public boolean isImageAllowed(String imageExt) {
         for (String ext : IMAGE_FILE_EXT) {
@@ -127,12 +131,35 @@ public class ImageService {
             return true;
     }
 
-    public Object getImageDetailByiid(int iid) {
+    public Object getImageDetailByiid(int iid, int uid) {
         HashMap<String, Object> details = new HashMap<>();
+        Image image = imageMapper.getImageByiid(iid);
+        boolean isStar = false;
+        boolean isThumb = false;
+        boolean isFollow = false;
+        if (image == null)
+            return null;
+        else {
+            details = this.makeupDeatils(image, iid);
+            if (starMapper.checkStarByUid(iid, uid) > 0)
+                isStar = true;
+            if (thumbMapper.checkThumbByUid(iid, uid) > 0)
+                isThumb = true;
+            Integer fid = imageMapper.getUidbyImage(iid);
+            if (fid != null && userMapper.checkFollowByFid(uid, fid) > 0)
+                isFollow = true;
+            details.put("isFollow", isFollow);
+            details.put("isStar", isStar);
+            details.put("isThumb", isThumb);
+        }
+        return details;
+    }
+
+    private HashMap<String, Object> makeupDeatils(Image image, int iid) {
         int star = 0;
         int thumb = 0;
         List tags = new ArrayList();
-        Image image = imageMapper.getImageByiid(iid);
+        HashMap<String, Object> details = new HashMap<>();
         if (image == null)
             return null;
         star = imageMapper.getImageStarCount(iid);
@@ -167,7 +194,7 @@ public class ImageService {
 
     private void makeUp(Map<String,Object> imageMap) {
         int star = starMapper.getStarByiid((Integer) imageMap.get("iid"));
-        int thumb = thumbMapper.getThumByiid((Integer) imageMap.get("iid"));
+        int thumb = thumbMapper.getThumbByiid((Integer) imageMap.get("iid"));
         String smallUrl = imageMap.get("url").toString().replace("original", "small");
         imageMap.put("url", smallUrl);
         imageMap.put("star", star);
@@ -184,4 +211,29 @@ public class ImageService {
         return mapList;
     }
 
+    public List<Map<String, Object>> getMyStars(int uid) {
+        List<Integer> stats = starMapper.getStars(uid);
+        if (stats.size() == 0)
+            return null;
+        System.out.println(stats.toString());
+        List<Map<String, Object>> imgs = imageMapper.selectMyStars(stats);
+        Iterator iterator = imgs.iterator();
+        while (iterator.hasNext()) {
+            Map<String, Object> img = (Map<String, Object>) iterator.next();
+            this.makeUp(img);
+        }
+        return imgs;
+    }
+
+    public List<Map<String, Object>> getListByTagName(String tagName) {
+        List<Map<String, Object>> myTagImages = imageMapper.getListByTagName(tagName);
+        if (myTagImages.size() == 0)
+            return null;
+        Iterator iterator = myTagImages.iterator();
+        while (iterator.hasNext()) {
+            Map<String, Object> img = (Map<String, Object>) iterator.next();
+            this.makeUp(img);
+        }
+        return myTagImages;
+    }
 }

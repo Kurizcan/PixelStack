@@ -3,14 +3,12 @@ package com.pixelstack.ims.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageInfo;
 import com.pixelstack.ims.common.Auth.UserLoginToken;
+import com.pixelstack.ims.service.GeneralService;
 import com.pixelstack.ims.service.ImageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 @RestController
@@ -22,10 +20,13 @@ public class ImageController {
     @Autowired
     ImageService imageService;
 
+    @Autowired
+    GeneralService generalService;
+
     @ResponseBody
     @GetMapping(value = {"/getImageDetails"})
-    public Object getImageDetails(int iid) {
-        HashMap details = (HashMap) imageService.getImageDetailByiid(iid);
+    public Object getImageDetails(int iid, @RequestParam(defaultValue = "0") int uid) {
+        HashMap details = (HashMap) imageService.getImageDetailByiid(iid, uid);
         result.clear();
         if (details == null) {
             result.put("status", 500);
@@ -40,6 +41,9 @@ public class ImageController {
             result.put("tags", details.get("tags"));
             result.put("star", details.get("star"));
             result.put("thumb", details.get("thumb"));
+            result.put("isStar", details.get("isStar"));
+            result.put("isThumb", details.get("isThumb"));
+            result.put("isFollow", details.get("isFollow"));
         }
         return result;
     }
@@ -65,6 +69,59 @@ public class ImageController {
         List<Map<String,Object>> mapList =(List<Map<String,Object>>) imageService.getImageListByUid(uid);
         result.clear();
         result.put("imageList", mapList);
+        return result;
+    }
+
+
+    @UserLoginToken
+    @GetMapping(value = {"/isStar"})
+    public Object isStar(int iid, int uid, boolean isStar) {
+        result.clear();
+        if (generalService.IsStar(iid, uid, isStar)) {
+            result.put("status", 200);
+            result.put("isStar", isStar);
+        }
+        else {
+            result.put("status", 500);
+            result.put("message", "error");
+        }
+        return result;
+    }
+
+    @UserLoginToken
+    @GetMapping(value = {"/isThumb"})
+    public Object isThumb(int iid, int uid, boolean isThumb) {
+        result.clear();
+        if (generalService.IsThumb(iid, uid, isThumb)) {
+            result.put("status", 200);
+            result.put("isThumb", isThumb);
+        }
+        else {
+            result.put("status", 500);
+            result.put("message", "error");
+        }
+        return result;
+    }
+
+    @UserLoginToken
+    @GetMapping(value = {"/myStars"})
+    public Object myStars(int uid) {
+        List<Map<String, Object>> myStars = null;
+        myStars = (List<Map<String, Object>>) imageService.getMyStars(uid);
+        result.clear();
+        result.put("status", 200);
+        result.put("starList", myStars);
+        return result;
+    }
+
+    @UserLoginToken
+    @GetMapping(value = {"/getListByTagName"})
+    public Object getListByTagName(String tagName) {
+        List<Map<String, Object>> myTagsImg = null;
+        myTagsImg = (List<Map<String, Object>>) imageService.getListByTagName(tagName);
+        result.clear();
+        result.put("status", 200);
+        result.put("ImageList", myTagsImg);
         return result;
     }
 }

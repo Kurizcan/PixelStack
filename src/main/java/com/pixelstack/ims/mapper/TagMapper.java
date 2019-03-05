@@ -15,19 +15,15 @@ public interface TagMapper {
     @Select("select * from tb_tag where tagname = #{tagname}")
     public Tag selectTagByName(String tagname);
 
-    @Insert("insert into tb_tag(tid,tagname) values (#{tid},#{tagname})")
-    public int addTag(Tag tag);
+    @Insert("insert into tb_tag(tagname) values (#{tagname})")
+    @Options(useGeneratedKeys = true, keyProperty = "tid", keyColumn = "tid")
+    public int addTagByName(Tag tag);
 
     @Delete("delete from tb_tag where tid=#{tid}")
     public int deleteTagById(int tid);
 
-    @InsertProvider(type = TagSqlProvider.class, method = "InsertTags")
-    @Options(useGeneratedKeys = true, keyProperty = "tid", keyColumn = "tid")
-    public int addTags(@Param("list") List<Tag> Tags);
-
-    @InsertProvider(type = TagSqlProvider.class, method = "InsertTag_Relate")
+    @Insert("insert into tb_tag_relate(iid, tid) values (#{iid}, #{tid})")
     public int addTagsRelate(@Param("iid") int iid, @Param("tid") int tid);
-
 
 
 }
