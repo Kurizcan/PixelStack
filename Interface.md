@@ -391,44 +391,23 @@
                         "authority": "user",
                         "email": "lcan@gmail.com",
                         "status": "frozen"
-                    },
-                    {
-                        "uid": 106,
-                        "username": "XXXXG",
-                        "authority": "user",
-                        "email": "XXXG@gmail.com",
-                        "status": "normal"
-                    },
-                    {
-                        "uid": 107,
-                        "username": "XXXA",
-                        "authority": "user",
-                        "email": "lcan@gmail.com",
-                        "status": "normal"
-                    },
-                    {
-                        "uid": 108,
-                        "username": "VAVA",
-                        "authority": "user",
-                        "email": "lcan@gmail.com",
-                        "status": "normal"
-                    },
-                    {
-                        "uid": 109,
-                        "username": "Paul",
-                        "authority": "user",
-                        "email": "lcan@gmail.com",
-                        "status": "normal"
-                    },
-                    {
-                        "uid": 110,
-                        "username": "Dawe",
-                        "authority": "user",
-                        "email": "lcan@gmail.com",
-                        "status": "normal"
                     }
                 ]
             }  
+
+### 处理举报评论
+
+    method:GET
+    http://localhost:8080/admin/dealWithReport
+    params:
+        cid:102
+        reportRight:false(举报有效，删除该评论) true(举报无效，恢复评论)
+
+    return: 
+            {
+                "message": "处理成功/失败",
+                "status": 200/500
+            }
 
 
 ## 图片
@@ -479,11 +458,13 @@
                     {
                         "cdate": "2019-03-04",
                         "content": "great",
+                        "cid": 100,
                         "username": "Curry"
                     },
                     {
                         "cdate": "2019-03-04",
                         "content": "wonderful",
+                        "cid": 101,
                         "username": "Dawe"
                     }
                 ],
@@ -530,34 +511,6 @@
                     },
                     {
                         "star": 0,
-                        "iid": 146,
-                        "thumb": 0,
-                        "count": 0,
-                        "url": "C:\\Users\\asus\\Desktop\\users\\kobe\\2019-03-03\\small\\IMG_20170224_154309.jpg"
-                    },
-                    {
-                        "star": 0,
-                        "iid": 147,
-                        "thumb": 0,
-                        "count": 0,
-                        "url": "C:\\Users\\asus\\Desktop\\users\\kobe\\2019-03-03\\small\\IMG_20170223_170105.jpg"
-                    },
-                    {
-                        "star": 0,
-                        "iid": 148,
-                        "thumb": 0,
-                        "count": 0,
-                        "url": "C:\\Users\\asus\\Desktop\\users\\kobe\\2019-03-03\\small\\IMG_20170223_171111.jpg"
-                    },
-                    {
-                        "star": 0,
-                        "iid": 149,
-                        "thumb": 0,
-                        "count": 0,
-                        "url": "C:\\Users\\asus\\Desktop\\users\\kobe\\2019-03-03\\small\\IMG_20170224_190901.jpg"
-                    },
-                    {
-                        "star": 0,
                         "iid": 150,
                         "thumb": 1,
                         "count": 0,
@@ -569,13 +522,6 @@
                         "thumb": 1,
                         "count": 0,
                         "url": "C:\\Users\\asus\\Desktop\\users\\kobe\\2019-03-03\\small\\IMG_20170224_154309.jpg"
-                    },
-                    {
-                        "star": 3,
-                        "iid": 152,
-                        "thumb": 4,
-                        "count": 0,
-                        "url": "C:\\Users\\asus\\Desktop\\users\\kobe\\2019-03-03\\small\\IMG_20170223_170105.jpg"
                     },
                     {
                         "star": 0,
@@ -666,3 +612,53 @@
                 "isThumb": false,
                 "status": 200
             }        
+
+## 评论
+
+### 举报评论
+
+    method:Post
+    http://localhost:8080/Comment/report
+
+    params:
+        cid:106   
+
+    return:
+            {
+                "message": "举报成功",
+                "status": 200
+            }
+
+### 显示被举报评论列表
+
+    method:GET
+    http://localhost:8080/Comment/getReportComment
+
+    return:
+            {
+               "comments": [
+                    {
+                        "cdate": "2019-03-04",
+                        "report": true,
+                        "content": "wonderful",
+                        "cid": 101,
+                        "username": "Dawe"
+                    },
+                    {
+                        "cdate": "2019-03-05",
+                        "report": true,
+                        "content": "\"帅\"",
+                        "cid": 102,
+                        "username": "XXXXG"
+                    }
+                ],
+                "status": 200
+            } 
+
+            无举报信息时候显示 
+            {
+                "status": 500,
+               "comments": "查询失败"
+            }             
+
+  
