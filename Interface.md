@@ -244,6 +244,21 @@
                 "status": 200
             }    
 
+### 判断两个用户之间的关系
+
+    method:GET
+    http://localhost:8080/user/followRelate
+
+    params:
+        uid:108 (可不携带默认 0)
+        fid:104 (可不携带默认 0)
+
+    return:
+            {
+                "isFollow": false,
+                "status": 200
+            }
+
 ### 获取用户关注列表
 
     method:GET
