@@ -419,7 +419,7 @@
 
 
     params:
-        iid:153
+        iid:153 (不传参数默认点赞，关注，收藏为 false)
 
     return:
             {
@@ -495,20 +495,6 @@
                 "prePage": 1,
                 "nextPage": 3,
                 "imageList": [
-                    {
-                        "star": 0,
-                        "iid": 144,
-                        "thumb": 0,
-                        "count": 0,
-                        "url": "C:\\Users\\asus\\Desktop\\users\\kobe\\2019-03-03\\small\\IMG_20170224_190901.jpg"
-                    },
-                    {
-                        "star": 0,
-                        "iid": 145,
-                        "thumb": 0,
-                        "count": 0,
-                        "url": "C:\\Users\\asus\\Desktop\\users\\kobe\\2019-03-03\\small\\IMG_20170222_161223.jpg"
-                    },
                     {
                         "star": 0,
                         "iid": 150,
@@ -597,6 +583,33 @@
 
         500 错误
 
+### 我的收藏
+
+    method:Get
+    http://localhost:8080/image/myStars
+    
+    params:
+        uid:108
+
+    return:
+            {
+                "starList": [
+                    {
+                        "star": 4,
+                        "iid": 152,
+                        "thumb": 4,
+                        "count": 0,
+                        "url": "C:\\Users\\asus\\Desktop\\users\\kobe\\2019-03-03\\small\\IMG_20170223_170105.jpg"
+                    }
+                ],
+                "status": 200
+            }
+
+            {
+                "starList": null,
+                "status": 200
+            }
+
 ### 点赞
 
     method:Get
@@ -661,4 +674,31 @@
                "comments": "查询失败"
             }             
 
-  
+### 根据标签返回图片列表
+
+    method:GET
+    http://localhost:8080/image/getListByTagName
+
+    params:
+        tagName:切尔西
+
+    return:
+            {
+                "starList": [
+                    {
+                        "star": 0,
+                        "iid": 100,
+                        "thumb": 0,
+                        "count": 0,
+                        "url": "C:\\Users\\asus\\Desktop\\users\\kobe\\2019-03-03\\bigIMG_20170222_125814.jpg"
+                    },
+                    {
+                        "star": 0,
+                        "iid": 101,
+                        "thumb": 0,
+                        "count": 0,
+                        "url": "C:\\Users\\asus\\Desktop\\users\\kobe\\2019-03-03\\bigIMG_20170222_161223.jpg"
+                    }
+                ],
+                "status": 200
+            }
