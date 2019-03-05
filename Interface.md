@@ -228,6 +228,21 @@
             "status": 200
         }
 
+### 关注用户
+
+    method:POST
+    http://localhost:8080/user/isFollow
+
+    params:
+        isFollow:false
+        uid:108
+        fid:104
+
+    return:
+            {
+                "isFollow": false,
+                "status": 200
+            }    
 
 ## 管理员
 
@@ -291,7 +306,7 @@
 
     return:
             {
-                "user List": [
+                "userList": [
                     {
                         "uid": 101,
                         "username": "Lcanboom",
@@ -556,21 +571,23 @@
         uid:108
         iid:152
 
-    {
-        "star": 3,
-        "isThumb": false, 
-        "isStar": false,
-        "upload": "Sun Mar 03 2019",
-        "thumb": 4,
-        "author": "kobe",
-        "count": 0,
-        "title": "wnba",
-        "url": "C:\\Users\\asus\\Desktop\\users\\kobe\\2019-03-03\\original\\IMG_20170223_170105.jpg",
-        "tags": [
-            "大骚伟",
-            "孙燕姿"
-        ]
-    }    
+    return:
+            {
+                "isThumb": false,
+                "isFollow": false,
+                "star": 3,
+                "isStar": false,
+                "upload": "Sun Mar 03 2019",
+                "thumb": 3,
+                "author": "Paul",
+                "count": 0,
+                "title": "wnba",
+                "url": "C:\\Users\\asus\\Desktop\\users\\kobe\\2019-03-03\\original\\IMG_20170223_170105.jpg",
+                "tags": [
+                    "大骚伟",
+                    "孙燕姿"
+                ]
+            }   
 
 ### 添加评论
 
@@ -592,7 +609,7 @@
 
 ### 收藏
 
-    method:Post
+    method:Get
     http://localhost:8080/image/isStar
 
     params:
@@ -610,7 +627,7 @@
 
 ### 点赞
 
-    method:Post
+    method:Get
     http://localhost:8080/image/isThumb
 
     params:
