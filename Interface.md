@@ -519,13 +519,6 @@
                     },
                     {
                         "star": 0,
-                        "iid": 151,
-                        "thumb": 1,
-                        "count": 0,
-                        "url": "C:\\Users\\asus\\Desktop\\users\\kobe\\2019-03-03\\small\\IMG_20170224_154309.jpg"
-                    },
-                    {
-                        "star": 0,
                         "iid": 153,
                         "thumb": 0,
                         "count": 0,
@@ -564,7 +557,7 @@
 
 ### 添加评论
 
-    method:Post
+    method:POST
     http://localhost:8080/Comment/add
 
     params:
@@ -582,7 +575,7 @@
 
 ### 收藏
 
-    method:Get
+    method:GET
     http://localhost:8080/image/isStar
 
     params:
@@ -600,7 +593,7 @@
 
 ### 我的收藏
 
-    method:Get
+    method:GET
     http://localhost:8080/image/myStars
     
     params:
@@ -660,7 +653,7 @@
 
 ### 举报评论
 
-    method:Post
+    method:POST
     http://localhost:8080/Comment/report
 
     params:
