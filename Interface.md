@@ -627,7 +627,7 @@
 
 ### 点赞
 
-    method:Get
+    method:GET
     http://localhost:8080/image/isThumb
 
     params:
@@ -640,6 +640,21 @@
                 "isThumb": false,
                 "status": 200
             }        
+
+### 修改标题
+
+    method:POST
+    http://localhost:8080/image/updateTitle?iid=152&title=%E7%BE%8E%E4%B8%BD%E5%B9%B2%E5%B9%B2%E5%B9%B2
+
+    params:
+        iid:152
+        title:火箭总冠军
+
+    return:
+            {
+                "message": "修改完成",
+                "status": 200
+            }
 
 ## 评论
 
