@@ -8,6 +8,7 @@ import com.pixelstack.ims.service.ImageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.*;
 
 
@@ -25,7 +26,7 @@ public class ImageController {
 
     @ResponseBody
     @GetMapping(value = {"/getImageDetails"})
-    public Object getImageDetails(int iid, @RequestParam(defaultValue = "0") int uid) {
+    public Object getImageDetails(int iid, @RequestParam(defaultValue = "0") int uid) throws IOException {
         HashMap details = (HashMap) imageService.getImageDetailByiid(iid, uid);
         result.clear();
         if (details == null) {
@@ -114,14 +115,33 @@ public class ImageController {
         return result;
     }
 
-    @UserLoginToken
-    @GetMapping(value = {"/getListByTagName"})
-    public Object getListByTagName(String tagName) {
-        List<Map<String, Object>> myTagsImg = null;
-        myTagsImg = (List<Map<String, Object>>) imageService.getListByTagName(tagName);
+    @GetMapping(value = {"/getListBySearch"})
+    public Object getListByTagNameOrAuthorOrTitle(@RequestParam(defaultValue = "0") int type,
+                                                  @RequestParam(defaultValue = "海豹") String search)
+    {
+        List<Map<String, Object>> Imgs = null;
+        Imgs = (List<Map<String, Object>>) imageService.getListByTagNameOrAuthorOrTitle(type, search);
         result.clear();
-        result.put("status", 200);
-        result.put("ImageList", myTagsImg);
+        if (Imgs == null)
+            result.put("status", 500);
+        else
+            result.put("status", 200);
+        result.put("ImageList", Imgs);
+        return result;
+    }
+
+    @UserLoginToken
+    @PostMapping(value = "/updateTitle")
+    public Object updateTitle(int iid, String title) {
+        result.clear();
+        if (title == null || title.equals("") || !imageService.updateTitle(iid, title)) {
+            result.put("status", 500);
+            result.put("message", "修改无效");
+        }
+        else {
+            result.put("status", 200);
+            result.put("message", "修改完成");
+        }
         return result;
     }
 }

@@ -63,9 +63,10 @@ public class UserService {
      */
     public int modify(User user) {
         User old = userMapper.selectUserById(user.getUid());
+        System.out.println(old.getPassword());
         int status = userMapper.updateUserById(user);
         // 一旦用户修改了密码，需要重新设置它的 token
-        if (!old.getPassword().equals(user.getPassword())) {
+        if (!user.getPassword().equals("") && !old.getPassword().equals(user.getPassword())) {
             authentication.deleteToken(old);
             status = 2;         // 用户密码被修改
         }

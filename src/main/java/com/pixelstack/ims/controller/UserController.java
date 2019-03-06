@@ -70,17 +70,18 @@ public class UserController {
     @PostMapping(value = {"/login"})
     public Object checkUser(User user) throws NotFoundException{
         User login_user = userService.login(user);
+        result.clear();
         if (login_user == null) {
             result.put("status", "500");
             result.put("message", "用户不存在或者密码不正确");
         }
         else if (login_user.getStatus().equals("frozen")) {
             result.put("status", "501");
-            result.put("message", "账户被冻结");
+            result.put("message", "账户被冻结90天");
         }
         else if (login_user.getStatus().equals("terminate")) {
             result.put("status", "502");
-            result.put("message", "账户被封锁");
+            result.put("message", "账户被封停");
         }
         else {
             // 登陆成功，创建 token 并保存至 redis 中

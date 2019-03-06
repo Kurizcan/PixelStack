@@ -4,7 +4,9 @@ import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.pixelstack.ims.common.Auth.GetClientIp;
 import com.pixelstack.ims.common.ImageHelper.ImgResizeUtil;
+import com.pixelstack.ims.common.Redis.RedisOperator;
 import com.pixelstack.ims.domain.Image;
 import com.pixelstack.ims.mapper.ImageMapper;
 import com.pixelstack.ims.mapper.StarMapper;
@@ -16,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -43,6 +46,15 @@ public class ImageService {
 
     @Autowired
     UserMapper userMapper;
+
+    @Autowired
+    RedisOperator redisOperator;
+
+    @Autowired
+    GetClientIp getClientIp;
+
+    @Autowired
+    private HttpServletRequest request;
 
     public boolean isImageAllowed(String imageExt) {
         for (String ext : IMAGE_FILE_EXT) {
@@ -124,34 +136,53 @@ public class ImageService {
             return true;
     }
 
-    public boolean addTitle(int pids, String titles) {
-        if (imageMapper.addTiltle(titles, pids) == 0)
-            return false;
-        else
-            return true;
-    }
-
-    public Object getImageDetailByiid(int iid, int uid) {
+    @Transactional
+    public Object getImageDetailByiid(int iid, int uid) throws IOException {
         HashMap<String, Object> details = new HashMap<>();
         Image image = imageMapper.getImageByiid(iid);
         boolean isStar = false;
         boolean isThumb = false;
         boolean isFollow = false;
-        if (image == null)
-            return null;
-        else {
-            details = this.makeupDeatils(image, iid);
-            if (starMapper.checkStarByUid(iid, uid) > 0)
-                isStar = true;
-            if (thumbMapper.checkThumbByUid(iid, uid) > 0)
-                isThumb = true;
-            Integer fid = imageMapper.getUidbyImage(iid);
-            if (fid != null && userMapper.checkFollowByFid(uid, fid) > 0)
-                isFollow = true;
-            details.put("isFollow", isFollow);
-            details.put("isStar", isStar);
-            details.put("isThumb", isThumb);
+        boolean exit = false;
+        try {
+            if (image == null)
+                return null;
+            else {
+                String ip = getClientIp.getIpAddr(request);
+                redisOperator.select(1);
+
+                if (uid == 0) {
+                    if (!redisOperator.sHasKey(String.valueOf(iid), ip)) {
+                        redisOperator.sSet(String.valueOf(iid), ip);
+                        imageMapper.updateCount(iid);               // 浏览量加 1
+                        image.setCount(image.getCount() + 1);
+                    }
+                }
+                else {
+                    if (!redisOperator.sHasKey(String.valueOf(iid), String.valueOf(uid))) {
+                        redisOperator.sSet(String.valueOf(iid), String.valueOf(uid));
+                        imageMapper.updateCount(iid);               // 浏览量加 1
+                        image.setCount(image.getCount() + 1);
+                    }
+                }
+
+                details = this.makeupDeatils(image, iid);
+                if (starMapper.checkStarByUid(iid, uid) > 0)
+                    isStar = true;
+                if (thumbMapper.checkThumbByUid(iid, uid) > 0)
+                    isThumb = true;
+                Integer fid = imageMapper.getUidbyImage(iid);
+                if (fid != null && userMapper.checkFollowByFid(uid, fid) > 0)
+                    isFollow = true;
+                details.put("isFollow", isFollow);
+                details.put("isStar", isStar);
+                details.put("isThumb", isThumb);
+            }
+
+        } catch (Exception e) {
+            throw new RuntimeException("查询图片失败");
         }
+
         return details;
     }
 
@@ -225,8 +256,12 @@ public class ImageService {
         return imgs;
     }
 
-    public List<Map<String, Object>> getListByTagName(String tagName) {
-        List<Map<String, Object>> myTagImages = imageMapper.getListByTagName(tagName);
+    public List<Map<String, Object>> getListByTagNameOrAuthorOrTitle(int type, String search) {
+        List<Map<String, Object>> myTagImages;
+        if (type == 0)
+            myTagImages = imageMapper.getListByTagName(search);
+        else
+            myTagImages = imageMapper.getListByTitleOrAuthor(type, search);
         if (myTagImages.size() == 0)
             return null;
         Iterator iterator = myTagImages.iterator();
@@ -235,5 +270,12 @@ public class ImageService {
             this.makeUp(img);
         }
         return myTagImages;
+    }
+
+    public Boolean updateTitle(int iid, String title) {
+        if (imageMapper.updateTitle(iid, title) == 0)
+            return false;
+        else
+            return true;
     }
 }

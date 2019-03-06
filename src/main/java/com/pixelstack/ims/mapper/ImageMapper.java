@@ -17,9 +17,6 @@ public interface ImageMapper {
     @DeleteProvider(type = ImageSqlProvider.class, method = "deleteImage")
     public int deleteImage(@Param("iid") int iid);
 
-    //@UpdateProvider(type = ImageSqlProvider.class, method = "addTiltle")
-    //public int addTiltle(@Param("pids") ArrayList pids, @Param("title") String title);
-
     @Update("update tb_image_info set title = #{title} where iid = #{iid}")
     public int addTiltle(@Param("title") String title, @Param("iid") int iid);
 
@@ -35,11 +32,11 @@ public interface ImageMapper {
     @Select("SELECT tagname FROM tb_tag WHERE tid IN (SELECT tid from tb_tag_relate WHERE iid = #{iid})")
     public List<String> getImageAllTagsByiid(@Param("iid") int iid);
 
-    @Select("select iid, url, count from tb_image_info")
+    @Select("select iid, url, count from tb_image_info ORDER BY upload DESC")
     @ResultType(List.class)
     Page<Map<String,Object>> getImageList();
 
-    @Select("select iid, url, count from tb_image_info i, tb_user_info u where uid = #{uid} and u.username = i.author")
+    @Select("select iid, url, count from tb_image_info i, tb_user_info u where uid = #{uid} and u.username = i.author ORDER BY upload DESC")
     @ResultType(List.class)
     List<Map<String,Object>> getImageListByUid(int uid);
 
@@ -53,8 +50,18 @@ public interface ImageMapper {
 
     @Select("SELECT tb_tag_relate.iid, url, count from tb_tag, tb_tag_relate, tb_image_info " +
             "WHERE tb_tag.tid = tb_tag_relate.tid AND " +
-            "tagname = #{tagname} AND tb_image_info.iid = tb_tag_relate.iid")
+            "tagname = #{tagname} AND tb_image_info.iid = tb_tag_relate.iid ORDER BY upload DESC")
     @ResultType(List.class)
     public List<Map<String, Object>> getListByTagName(String tagname);
+
+    @Update("update tb_image_info set count = count + 1 where iid = #{iid}")
+    public int updateCount(int iid);
+
+    @UpdateProvider(type = ImageSqlProvider.class, method = "updateTitle")
+    public int updateTitle(@Param("iid") int iid, @Param("title") String title);
+
+    @SelectProvider(type = ImageSqlProvider.class, method = "selectByTitleOrAuthor")
+    @ResultType(List.class)
+    public List<Map<String, Object>> getListByTitleOrAuthor(@Param("type") int type, @Param("search") String search);
 
 }

@@ -5,10 +5,7 @@ import com.pixelstack.ims.mapper.CommentMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 

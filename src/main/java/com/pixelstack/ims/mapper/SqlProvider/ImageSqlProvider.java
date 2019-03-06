@@ -40,20 +40,6 @@ public class ImageSqlProvider {
                 .toString();
     }
 
-    /*
-    public String addTiltle(ArrayList pids, String title) {
-        String totalSql = "update tb_image_info set title = " + title + " where iid in (";
-        Iterator<String> iterator = pids.iterator();
-        while (iterator.hasNext()) {
-            String sql = iterator.next();
-            totalSql += sql + ",";
-        }
-        totalSql.replace(totalSql.charAt(totalSql.length() - 1), ')');
-        System.out.println(totalSql);
-        return totalSql;
-    }
-    */
-
     public String selectMyStars(Map map) {
         List<Integer> iids = (List<Integer>) map.get("list");
         StringBuilder sb = new StringBuilder();
@@ -67,9 +53,32 @@ public class ImageSqlProvider {
                 sb.append(",");
             }
         }
-        sb.append(")");
+        sb.append(") ORDER BY upload DESC");
         //System.out.println(sb.toString());
         return sb.toString();
+    }
+
+    public String updateTitle() {
+        return new SQL()
+                .UPDATE("tb_image_info")
+                .SET("title = #{title}")
+                .WHERE("iid = #{iid}")
+                .toString();
+    }
+
+    public String selectByTitleOrAuthor(Map map) {
+        int type = Integer.parseInt(map.get("type").toString());
+        String search = map.get("search").toString();
+        String sql = new SQL() {{
+            SELECT("iid, url, count");
+            FROM("tb_image_info");
+            if (type == 1 && !search.equals(""))
+                WHERE("author = #{search}");
+            if (type == 2 && !search.equals(""))
+                WHERE("title like CONCAT('%',CONCAT(#{search},'%'))");
+        }}.toString();
+        //System.out.println(sql);
+        return sql;
     }
 
 

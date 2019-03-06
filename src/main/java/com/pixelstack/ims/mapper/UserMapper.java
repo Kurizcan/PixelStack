@@ -21,6 +21,7 @@ public interface UserMapper {
     public User selectUserById(@Param("uid") int uid);
 
     @UpdateProvider(type = UserSqlProvider.class, method = "updateUserById")
+    @Options(useGeneratedKeys = true, keyProperty = "iid", keyColumn = "iid")
     public int updateUserById(User user);
 
     @SelectProvider(type = CountSqlProvider.class, method = "getStarCount")
@@ -60,5 +61,13 @@ public interface UserMapper {
             "WHERE f.uid = u.uid AND f.fid = #{uid} ")
     @ResultType(List.class)
     public List<Map<String, Object>> getFans(int uid);
+
+    @SelectProvider(type = UserSqlProvider.class, method = "selectAllUsers")
+    @ResultType(List.class)
+    public List<Map<String, Object>> getUsersByuids(@Param("list") List<String> list);
+
+    @Update("UPDATE tb_user_info SET `status` = 'normal', admindate = NULL WHERE TIMEDIFF(NOW(), admindate) > " +
+            "TIME('00:01:00') AND `status` = 'frozen';")
+    public int unBlock();
 
 }
