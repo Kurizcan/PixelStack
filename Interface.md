@@ -416,7 +416,7 @@
     http://localhost:8080/admin/dealWithReport
     params:
         cid:102
-        reportRight:false(举报有效，删除该评论) true(举报无效，恢复评论)
+        reportRight:false(举报无效，恢复评论) true(举报有效，删除该评论)
 
     return: 
             {
@@ -707,10 +707,10 @@
 ### 根据标签返回图片列表
 
     method:GET
-    http://localhost:8080/image/getListByTagName
-
+    http://localhost:8080/image/getListBySearch
     params:
-        tagName:切尔西
+            type:0 (标签) 1 (作者) 2 (标题)
+            search:查询内容
 
     return:
             {
@@ -730,5 +730,10 @@
                         "url": "C:\\Users\\asus\\Desktop\\users\\kobe\\2019-03-03\\bigIMG_20170222_161223.jpg"
                     }
                 ],
+                "status": 200
+            }
+
+            {
+                "starList": null
                 "status": 200
             }
