@@ -697,12 +697,12 @@
                "comments": "查询失败"
             }             
 
-### 根据标签返回图片列表
+### 根据查询返回图片列表
 
     method:GET
     http://localhost:8080/image/getListBySearch
     params:
-            type:0 (标签) 1 (作者) 2 (标题)
+            type:tag / author / title
             search:查询内容
 
     return:
