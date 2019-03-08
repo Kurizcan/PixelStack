@@ -67,14 +67,14 @@ public class ImageSqlProvider {
     }
 
     public String selectByTitleOrAuthor(Map map) {
-        int type = Integer.parseInt(map.get("type").toString());
+        String type = map.get("type").toString();
         String search = map.get("search").toString();
         String sql = new SQL() {{
             SELECT("iid, url, count");
             FROM("tb_image_info");
-            if (type == 1 && !search.equals(""))
+            if (type.equals("author") && !search.equals(""))
                 WHERE("author = #{search}");
-            if (type == 2 && !search.equals(""))
+            if (type.equals("title") && !search.equals(""))
                 WHERE("title like CONCAT('%',CONCAT(#{search},'%'))");
         }}.toString();
         //System.out.println(sql);

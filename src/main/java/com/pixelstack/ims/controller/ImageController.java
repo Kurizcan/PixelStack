@@ -116,7 +116,7 @@ public class ImageController {
     }
 
     @GetMapping(value = {"/getListBySearch"})
-    public Object getListByTagNameOrAuthorOrTitle(@RequestParam(defaultValue = "0") int type,
+    public Object getListByTagNameOrAuthorOrTitle(@RequestParam(defaultValue = "0") String type,
                                                   @RequestParam(defaultValue = "海豹") String search)
     {
         List<Map<String, Object>> Imgs = null;

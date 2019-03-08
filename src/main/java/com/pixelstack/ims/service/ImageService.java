@@ -256,9 +256,9 @@ public class ImageService {
         return imgs;
     }
 
-    public List<Map<String, Object>> getListByTagNameOrAuthorOrTitle(int type, String search) {
+    public List<Map<String, Object>> getListByTagNameOrAuthorOrTitle(String type, String search) {
         List<Map<String, Object>> myTagImages;
-        if (type == 0)
+        if (type.equals("tag"))
             myTagImages = imageMapper.getListByTagName(search);
         else
             myTagImages = imageMapper.getListByTitleOrAuthor(type, search);

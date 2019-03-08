@@ -62,6 +62,6 @@ public interface ImageMapper {
 
     @SelectProvider(type = ImageSqlProvider.class, method = "selectByTitleOrAuthor")
     @ResultType(List.class)
-    public List<Map<String, Object>> getListByTitleOrAuthor(@Param("type") int type, @Param("search") String search);
+    public List<Map<String, Object>> getListByTitleOrAuthor(@Param("type") String type, @Param("search") String search);
 
 }
