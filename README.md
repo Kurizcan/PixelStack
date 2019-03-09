@@ -33,6 +33,8 @@ PixelStack backend
 - http://xxxxx:8080/image/getImageList
 -  http://xxxxx:8080/hello
 
+## 其他信息
 
+前端请参考：[vue-vuetify-pixelstack: frontend of pixelstack use vue.js](https://github.com/XXXMrG/vue-vuetify-pixelstack)
 
 
